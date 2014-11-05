@@ -16,6 +16,8 @@ import java.util.List;
 public class ItemDaoImpl implements ItemDao {
     private JdbcTemplate jdbcTemplate;
 
+    public ItemDaoImpl(){}
+
     public ItemDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -48,7 +50,7 @@ public class ItemDaoImpl implements ItemDao {
                 new Object[]{barcode},
                 new RowCallbackHandler() {
                     public void processRow(ResultSet rs) throws SQLException {
-                        PromotionDao promotionDaoImpl = new PromotionDaoImpl();
+                        PromotionDao promotionDaoImpl = new PromotionDaoImpl(jdbcTemplate);
                         int promotionId = rs.getInt("promotionid");
                         Promotion promotionForType = promotionDaoImpl.getPromotion(promotionId);
 
