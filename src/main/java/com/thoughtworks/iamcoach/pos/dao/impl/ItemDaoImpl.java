@@ -16,8 +16,6 @@ import java.util.List;
 public class ItemDaoImpl implements ItemDao {
     private JdbcTemplate jdbcTemplate;
 
-    public ItemDaoImpl(){}
-
     public ItemDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
