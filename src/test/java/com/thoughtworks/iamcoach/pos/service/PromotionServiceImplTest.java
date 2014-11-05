@@ -7,6 +7,7 @@ import com.thoughtworks.iamcoach.pos.dao.impl.PromotionDaoImpl;
 import com.thoughtworks.iamcoach.pos.entity.Promotion;
 import com.thoughtworks.iamcoach.pos.entity.PromotionFactory;
 import com.thoughtworks.iamcoach.pos.service.impl.PromotionServiceImpl;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -20,9 +21,10 @@ import static org.mockito.Mockito.when;
 
 public class PromotionServiceImplTest {
 
-    @Test
-    public void should_return_the_promotions_of_an_item(){
+    private PromotionService promotionService;
 
+    @Before
+    public void before(){
         PromotionDao promotionDao = mock(PromotionDaoImpl.class);
         Set<String> promotionBarcodes = new HashSet<String>();
         promotionBarcodes.add("ITEM000001");
@@ -39,12 +41,17 @@ public class PromotionServiceImplTest {
         promotions.add(0, promotion);
         when(itemDao.getItemPromotions("ITEM000001")).thenReturn(promotions);
 
-        PromotionService promotionService = new PromotionServiceImpl(promotionDao,itemDao);
+        promotionService = new PromotionServiceImpl(promotionDao,itemDao);
+    }
 
+    @Test
+    public void should_return_the_promotions_of_an_item(){
         assertThat(promotionService.getItemPromotions("ITEM000001").get(0).getType()).isEqualTo(1);
+    }
+
+    @Test
+    public void should_return_the_promotions_of_null(){
         assertThat(promotionService.getItemPromotions("ITEM000002")).isEqualTo(null);
-
-
     }
 
 }
