@@ -1,13 +1,6 @@
-import com.thoughtworks.iamcoach.pos.dao.ItemDao;
-import com.thoughtworks.iamcoach.pos.dao.PromotionDao;
-import com.thoughtworks.iamcoach.pos.dao.impl.PromotionDaoImpl;
 import com.thoughtworks.iamcoach.pos.entity.Calculator;
 import com.thoughtworks.iamcoach.pos.entity.CartItem;
 import com.thoughtworks.iamcoach.pos.entity.Scanner;
-import com.thoughtworks.iamcoach.pos.service.ItemService;
-import com.thoughtworks.iamcoach.pos.service.PromotionService;
-import com.thoughtworks.iamcoach.pos.service.impl.ItemServiceImpl;
-import com.thoughtworks.iamcoach.pos.service.impl.PromotionServiceImpl;
 import com.thoughtworks.iamcoach.pos.util.DataTransfer;
 import com.thoughtworks.iamcoach.pos.util.FileProcessor;
 import org.springframework.context.ApplicationContext;
@@ -25,15 +18,9 @@ public class App {
         System.out.println("打印时间 " + dateFormat.format(new Date()));
 
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-config.xml");
-        ItemDao itemDaoImpl = (ItemDao) applicationContext.getBean("itemDaoImpl");
 
-        PromotionDao promotionDaoImpl = new PromotionDaoImpl();
+        Scanner scanner = (Scanner) applicationContext.getBean("scanner");
 
-        PromotionService promotionService = new PromotionServiceImpl(promotionDaoImpl,itemDaoImpl);
-
-        ItemService itemServiceImpl = new ItemServiceImpl(promotionService,itemDaoImpl);
-
-        Scanner scanner = new Scanner(itemServiceImpl);
         List<CartItem> cartItems = scanner.getCartItems(FileProcessor.readFile("cart.txt"));
         Set<String> cartCategories = scanner.getCartCategories(cartItems);
 
