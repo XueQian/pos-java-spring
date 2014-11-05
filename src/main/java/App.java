@@ -1,6 +1,5 @@
 import com.thoughtworks.iamcoach.pos.dao.ItemDao;
 import com.thoughtworks.iamcoach.pos.dao.PromotionDao;
-import com.thoughtworks.iamcoach.pos.dao.impl.ItemDaoImpl;
 import com.thoughtworks.iamcoach.pos.dao.impl.PromotionDaoImpl;
 import com.thoughtworks.iamcoach.pos.entity.Calculator;
 import com.thoughtworks.iamcoach.pos.entity.CartItem;
@@ -11,6 +10,8 @@ import com.thoughtworks.iamcoach.pos.service.impl.ItemServiceImpl;
 import com.thoughtworks.iamcoach.pos.service.impl.PromotionServiceImpl;
 import com.thoughtworks.iamcoach.pos.util.DataTransfer;
 import com.thoughtworks.iamcoach.pos.util.FileProcessor;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,7 +24,9 @@ public class App {
         System.out.println("**************************LET US GO**************************");
         System.out.println("打印时间 " + dateFormat.format(new Date()));
 
-        ItemDao itemDaoImpl = new ItemDaoImpl();
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-config.xml");
+        ItemDao itemDaoImpl = (ItemDao) applicationContext.getBean("itemDaoImpl");
+
         PromotionDao promotionDaoImpl = new PromotionDaoImpl();
 
         PromotionService promotionService = new PromotionServiceImpl(promotionDaoImpl,itemDaoImpl);
