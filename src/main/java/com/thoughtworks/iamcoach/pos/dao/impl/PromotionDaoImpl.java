@@ -4,6 +4,8 @@ import com.thoughtworks.iamcoach.pos.dao.PromotionDao;
 import com.thoughtworks.iamcoach.pos.entity.Promotion;
 import com.thoughtworks.iamcoach.pos.entity.PromotionFactory;
 import com.thoughtworks.iamcoach.pos.util.JdbcUtil;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowCallbackHandler;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,33 +19,29 @@ public class PromotionDaoImpl implements PromotionDao {
     PreparedStatement pre;
     private JdbcUtil jdbcUtil = new JdbcUtil();
 
+    private JdbcTemplate jdbcTemplate;
+
+    public PromotionDaoImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
     @Override
     public Promotion getPromotion(int id) {
-        Connection conn = jdbcUtil.getConnection();
-        Promotion promotion = null;
-        try {
-            pre = conn.prepareStatement("SELECT * FROM promotions WHERE p_id = ?");
-            pre.setInt(1, id);
-            rs = pre.executeQuery();
-            rs.next();
-            int type = rs.getInt("p_type");
-            promotion = PromotionFactory.getPromotionByType(type);
-            promotion.setId(rs.getInt("p_id"));
-            promotion.setDescription(rs.getString("p_description"));
-            promotion.setType(rs.getInt("p_type"));
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                rs.close();
-                pre.close();
-                jdbcUtil.closeConnection();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        return promotion;
+        final Promotion[] promotion = new Promotion[1];
+
+        jdbcTemplate.query("SELECT * FROM promotions WHERE p_id = ?",
+                new Object[]{id},
+                new RowCallbackHandler() {
+                    public void processRow(ResultSet rs) throws SQLException {
+                        int type = rs.getInt("p_type");
+                        promotion[0] = PromotionFactory.getPromotionByType(type);
+                        promotion[0].setId(rs.getInt("p_id"));
+                        promotion[0].setDescription(rs.getString("p_description"));
+                        promotion[0].setType(type);
+                    }
+                });
+        return promotion[0];
     }
 
     @Override
