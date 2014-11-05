@@ -21,7 +21,9 @@
         <constructor-arg name="jdbcTemplate" ref="jdbcTemplate"/>
     </bean>
 
-    <bean id="promotionDaoImpl" class="com.thoughtworks.iamcoach.pos.dao.impl.PromotionDaoImpl"/>
+    <bean id="promotionDaoImpl" class="com.thoughtworks.iamcoach.pos.dao.impl.PromotionDaoImpl">
+        <constructor-arg name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
 
     <bean id="promotionServiceImpl" class="com.thoughtworks.iamcoach.pos.service.impl.PromotionServiceImpl">
         <constructor-arg ref="itemDaoImpl"/>
