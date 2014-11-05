@@ -3,15 +3,37 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
-    <context:annotation-config />
+    <context:annotation-config/>
     <context:component-scan base-package="com.thoughtworks.iamcoach.pos"/>
+
     <bean id="datasource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
         <property name="url" value="jdbc:mysql://localhost:3306/pos_java"/>
         <property name="username" value="qianyan"/>
         <property name="password" value="pos"/>
     </bean>
+
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="datasource"/>
+    </bean>
+
+    <bean id="itemDaoImpl" class="com.thoughtworks.iamcoach.pos.dao.impl.ItemDaoImpl">
+        <constructor-arg name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+
+    <bean id="promotionDaoImpl" class="com.thoughtworks.iamcoach.pos.dao.impl.PromotionDaoImpl"/>
+
+    <bean id="promotionServiceImpl" class="com.thoughtworks.iamcoach.pos.service.impl.PromotionServiceImpl">
+        <constructor-arg ref="itemDaoImpl"/>
+        <constructor-arg ref="promotionDaoImpl"/>
+    </bean>
+
+    <bean id="itemServiceImpl" class="com.thoughtworks.iamcoach.pos.service.impl.ItemServiceImpl">
+        <constructor-arg ref="promotionServiceImpl"/>
+        <constructor-arg ref="itemDaoImpl"/>
+    </bean>
+
+    <bean id="scanner" class="com.thoughtworks.iamcoach.pos.entity.Scanner">
+        <constructor-arg name="itemServiceImpl" ref="itemServiceImpl"/>
     </bean>
 </beans>
