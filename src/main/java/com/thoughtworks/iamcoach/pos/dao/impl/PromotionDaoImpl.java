@@ -43,7 +43,6 @@ public class PromotionDaoImpl implements PromotionDao {
         final Set<String> promotionBarcodes = new HashSet<String>();
 
         jdbcTemplate.query("select * from items i, items_promotions ip where i.i_id = ip.itemid ",
-                new Object[]{},
                 new RowCallbackHandler() {
                     public void processRow(ResultSet rs) throws SQLException {
                         promotionBarcodes.add(rs.getString("i_barcode"));
