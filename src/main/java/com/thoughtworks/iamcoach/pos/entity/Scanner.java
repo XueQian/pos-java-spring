@@ -22,7 +22,7 @@ public class Scanner {
             if (aCartList.length() > 10) {
                 String stringBarcode = aCartList.split("-")[0];
                 String stringCount = aCartList.substring(11);
-                CartItem cartItem = new CartItem(this.itemServiceImpl.getItem(stringBarcode), Double.parseDouble(stringCount));
+                CartItem cartItem = new CartItem(itemServiceImpl.getItem(stringBarcode), Double.parseDouble(stringCount));
                 cartItems.add(cartItem);
             }
         }
@@ -30,7 +30,7 @@ public class Scanner {
         Set<String> uniqueBarcode = new HashSet<String>(cartList);
         for (String barcode : uniqueBarcode) {
             if (barcode.length() <= 10) {
-                CartItem cartItem = new CartItem(this.itemServiceImpl.getItem(barcode), Collections.frequency(cartList, barcode));
+                CartItem cartItem = new CartItem(itemServiceImpl.getItem(barcode), Collections.frequency(cartList, barcode));
                 cartItems.add(cartItem);
             }
         }
