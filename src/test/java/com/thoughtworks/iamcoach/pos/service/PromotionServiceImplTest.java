@@ -42,6 +42,8 @@ public class PromotionServiceImplTest {
         PromotionService promotionService = new PromotionServiceImpl(promotionDao,itemDao);
 
         assertThat(promotionService.getItemPromotions("ITEM000001").get(0).getType()).isEqualTo(1);
+        assertThat(promotionService.getItemPromotions("ITEM000002")).isEqualTo(null);
+
 
     }
 
