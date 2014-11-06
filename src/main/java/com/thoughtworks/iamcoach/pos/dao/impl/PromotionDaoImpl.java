@@ -4,12 +4,12 @@ import com.thoughtworks.iamcoach.pos.dao.PromotionDao;
 import com.thoughtworks.iamcoach.pos.entity.Promotion;
 import com.thoughtworks.iamcoach.pos.entity.PromotionFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class PromotionDaoImpl implements PromotionDao {
@@ -57,14 +57,30 @@ public class PromotionDaoImpl implements PromotionDao {
 
     @Override
     public Set<String> getPromotionBarcode() {
-        final Set<String> promotionBarcodes = new HashSet<String>();
+        String sql = "select * from items i, items_promotions ip where i.i_id = ip.itemid ";
 
-        jdbcTemplate.query("select * from items i, items_promotions ip where i.i_id = ip.itemid ",
-                new RowCallbackHandler() {
-                    public void processRow(ResultSet rs) throws SQLException {
-                        promotionBarcodes.add(rs.getString("i_barcode"));
-                    }
-                });
+        List<String> promotionBarcodeList = jdbcTemplate.query(sql,new RowMapper<String>() {
+            @Override
+            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getString("i_barcode");
+            }
+        });
+
+        Set<String> promotionBarcodes = new HashSet<String>();
+        promotionBarcodes.addAll(promotionBarcodeList);
         return promotionBarcodes;
     }
+// getPromotionBarcode　spring　另一种实现方法
+//    @Override
+//    public Set<String> getPromotionBarcode() {
+//        final Set<String> promotionBarcodes = new HashSet<String>();
+//
+//        jdbcTemplate.query("select * from items i, items_promotions ip where i.i_id = ip.itemid ",
+//                new RowCallbackHandler() {
+//                    public void processRow(ResultSet rs) throws SQLException {
+//                        promotionBarcodes.add(rs.getString("i_barcode"));
+//                    }
+//                });
+//        return promotionBarcodes;
+//    }
 }
