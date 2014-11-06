@@ -5,6 +5,8 @@ import com.thoughtworks.iamcoach.pos.dao.PromotionDao;
 import com.thoughtworks.iamcoach.pos.entity.Item;
 import com.thoughtworks.iamcoach.pos.entity.Promotion;
 import com.thoughtworks.iamcoach.pos.entity.PromotionFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 
@@ -48,7 +50,9 @@ public class ItemDaoImpl implements ItemDao {
                 new Object[]{barcode},
                 new RowCallbackHandler() {
                     public void processRow(ResultSet rs) throws SQLException {
-                        PromotionDao promotionDaoImpl = new PromotionDaoImpl(jdbcTemplate);
+                        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring-config.xml");
+                        PromotionDao promotionDaoImpl = (PromotionDao) applicationContext.getBean("promotionDaoImpl");
+
                         int promotionId = rs.getInt("promotionid");
                         Promotion promotionForType = promotionDaoImpl.getPromotion(promotionId);
 
