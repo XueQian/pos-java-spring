@@ -7,5 +7,5 @@ import java.util.Set;
 public interface PromotionDao {
     Promotion getPromotion(int id);
 
-    Set<String> getPromotionBarcode();
+    Set<String> getPromotionBarcodes();
 }

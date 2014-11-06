@@ -29,7 +29,7 @@ public class PromotionServiceImplTest {
         Set<String> promotionBarcodes = new HashSet<String>();
         promotionBarcodes.add("ITEM000001");
         promotionBarcodes.add("ITEM000003");
-        when(promotionDao.getPromotionBarcode()).thenReturn(promotionBarcodes);
+        when(promotionDao.getPromotionBarcodes()).thenReturn(promotionBarcodes);
 
         ItemDao itemDao = mock(ItemDaoImpl.class);
         List<Promotion> promotions = new ArrayList<Promotion>();

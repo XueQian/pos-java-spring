@@ -20,7 +20,7 @@ public class PromotionServiceImpl implements PromotionService {
     @Override
     public List<Promotion> getItemPromotions(String barcode) {
 
-        if (promotionDaoImpl.getPromotionBarcode().contains(barcode)) {
+        if (promotionDaoImpl.getPromotionBarcodes().contains(barcode)) {
             return itemDaoImpl.getItemPromotions(barcode);
         } else {
             return null;

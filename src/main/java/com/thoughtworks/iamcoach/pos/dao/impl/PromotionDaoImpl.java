@@ -56,7 +56,7 @@ public class PromotionDaoImpl implements PromotionDao {
     }
 
     @Override
-    public Set<String> getPromotionBarcode() {
+    public Set<String> getPromotionBarcodes() {
         String sql = "select * from items i, items_promotions ip where i.i_id = ip.itemid ";
 
         List<String> promotionBarcodeList = jdbcTemplate.query(sql,new RowMapper<String>() {
@@ -72,7 +72,7 @@ public class PromotionDaoImpl implements PromotionDao {
     }
 // getPromotionBarcode　spring　另一种实现方法
 //    @Override
-//    public Set<String> getPromotionBarcode() {
+//    public Set<String> getPromotionBarcodes() {
 //        final Set<String> promotionBarcodes = new HashSet<String>();
 //
 //        jdbcTemplate.query("select * from items i, items_promotions ip where i.i_id = ip.itemid ",
