@@ -19,7 +19,7 @@ public class PromotionDaoImpl implements PromotionDao {
     public PromotionDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-// getItem　spring　另一种实现方法
+// getPromotion　spring　另一种实现方法
 //   @Override
 //    public Promotion getPromotion(int id) {
 //
