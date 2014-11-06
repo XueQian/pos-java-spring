@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,22 +23,35 @@ public class ItemDaoImpl implements ItemDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+//    @Override
+//    public Item getItem(final String barcode) {
+//
+//        final Item item = new Item();
+//        jdbcTemplate.query("select * from items i,categories c where  i.i_categoryid = c.c_id and i_barcode = ?",
+//                new Object[]{barcode},
+//                new RowCallbackHandler() {
+//                    public void processRow(ResultSet rs) throws SQLException {
+//                        item.setId(rs.getInt("i_id"));
+//                        item.setBarcode(barcode);
+//                        item.setName(rs.getString("i_name"));
+//                        item.setUnit(rs.getString("i_unit"));
+//                        item.setPrice(rs.getDouble("i_price"));
+//                        item.setCategory(rs.getString("c_name"));
+//                    }
+//                });
+//        return item;
+//    }
+
     @Override
     public Item getItem(final String barcode) {
+        String sql = "select * from items i,categories c where  i.i_categoryid = c.c_id and i_barcode = ?";
 
-        final Item item = new Item();
-        jdbcTemplate.query("select * from items i,categories c where  i.i_categoryid = c.c_id and i_barcode = ?",
-                new Object[]{barcode},
-                new RowCallbackHandler() {
-                    public void processRow(ResultSet rs) throws SQLException {
-                        item.setId(rs.getInt("i_id"));
-                        item.setBarcode(barcode);
-                        item.setName(rs.getString("i_name"));
-                        item.setUnit(rs.getString("i_unit"));
-                        item.setPrice(rs.getDouble("i_price"));
-                        item.setCategory(rs.getString("c_name"));
-                    }
-                });
+        Item item = jdbcTemplate.queryForObject(sql,new Object[]{barcode},new RowMapper<Item>(){
+            @Override
+            public Item mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new Item(rs.getInt("i_id"),barcode,rs.getString("i_Name"),rs.getString("i_unit"),rs.getDouble("i_price"),rs.getString("c_name"));
+            }
+        });
         return item;
     }
 
