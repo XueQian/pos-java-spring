@@ -5,6 +5,7 @@ import com.thoughtworks.iamcoach.pos.entity.Promotion;
 import com.thoughtworks.iamcoach.pos.entity.PromotionFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
+import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,24 +19,40 @@ public class PromotionDaoImpl implements PromotionDao {
     public PromotionDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+// getItem　spring　另一种实现方法
+//   @Override
+//    public Promotion getPromotion(int id) {
+//
+//        final Promotion[] promotion = new Promotion[1];
+//
+//        jdbcTemplate.query("SELECT * FROM promotions WHERE p_id = ?",
+//                new Object[]{id},
+//                new RowCallbackHandler() {
+//                    public void processRow(ResultSet rs) throws SQLException {
+//                        int type = rs.getInt("p_type");
+//                        promotion[0] = PromotionFactory.getPromotionByType(type);
+//                        promotion[0].setId(rs.getInt("p_id"));
+//                        promotion[0].setDescription(rs.getString("p_description"));
+//                        promotion[0].setType(type);
+//                    }
+//                });
+//        return promotion[0];
+//    }
 
     @Override
     public Promotion getPromotion(int id) {
+        String sql = "SELECT * FROM promotions WHERE p_id = ?";
 
-        final Promotion[] promotion = new Promotion[1];
-
-        jdbcTemplate.query("SELECT * FROM promotions WHERE p_id = ?",
-                new Object[]{id},
-                new RowCallbackHandler() {
-                    public void processRow(ResultSet rs) throws SQLException {
-                        int type = rs.getInt("p_type");
-                        promotion[0] = PromotionFactory.getPromotionByType(type);
-                        promotion[0].setId(rs.getInt("p_id"));
-                        promotion[0].setDescription(rs.getString("p_description"));
-                        promotion[0].setType(type);
-                    }
-                });
-        return promotion[0];
+        return jdbcTemplate.queryForObject(sql,new Object[]{id},new RowMapper<Promotion>() {
+            @Override
+            public Promotion mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Promotion mapRowPromotion = PromotionFactory.getPromotionByType(rs.getInt("p_type"));
+                mapRowPromotion.setId(rs.getInt("p_id"));
+                mapRowPromotion.setDescription(rs.getString("p_description"));
+                mapRowPromotion.setType(rs.getInt("p_type"));
+                return mapRowPromotion;
+            }
+        });
     }
 
     @Override
