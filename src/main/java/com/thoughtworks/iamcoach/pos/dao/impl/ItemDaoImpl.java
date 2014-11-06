@@ -22,7 +22,7 @@ public class ItemDaoImpl implements ItemDao {
     public ItemDaoImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
+// getItem　spring　另一种实现方法
 //    @Override
 //    public Item getItem(final String barcode) {
 //
@@ -46,13 +46,12 @@ public class ItemDaoImpl implements ItemDao {
     public Item getItem(String barcode) {
         String sql = "select * from items i,categories c where  i.i_categoryid = c.c_id and i_barcode = ?";
 
-        Item item = jdbcTemplate.queryForObject(sql,new Object[]{barcode},new RowMapper<Item>(){
+        return jdbcTemplate.queryForObject(sql,new Object[]{barcode},new RowMapper<Item>(){
             @Override
             public Item mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return new Item(rs.getInt("i_id"),rs.getString("i_barcode"),rs.getString("i_Name"),rs.getString("i_unit"),rs.getDouble("i_price"),rs.getString("c_name"));
             }
         });
-        return item;
     }
 
     @Override
